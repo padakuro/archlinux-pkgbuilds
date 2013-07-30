@@ -1,0 +1,35 @@
+# Maintainer: Pascal Kuendig <padakuro at gmail dot com>
+
+pkgname=php-ev
+pkgver=0.2.4
+pkgrel=1
+pkgdesc="ev provides interface to libev library - high performance full-featured event loop written in C"
+arch=('i686' 'x86_64')
+url="http://pecl.php.net/package/ev"
+license=('PHP')
+conflicts=('php-ev')
+depends=('php')
+makedepends=('make' 'php')
+provides=('php-ev')
+
+source=(
+  "http://pecl.php.net/get/ev-$pkgver.tgz"
+  'ev.ini'
+)
+sha512sums=(
+  '54fd452138fe94935a4faaa551668190c86b2fb5e1f588de882de9d47020a9a1b41cf1d26ef09b0b1310941c2a60db7531eaad87c7a23472bd3201ee7c466881'
+  'be1cf535549a2188456a2639cebb372ffcffbfb868a97db2b4157af055bd1b7c152e03c7c9b6fc846bc48bdf68241c929b7af2e001b4bcb5ae9f191b6b337178'
+)
+
+build() {
+  cd "ev-$pkgver"
+
+  phpize
+  ./configure --with-ev --prefix=/usr
+  make
+}
+
+package() {
+  install -D -m755 "${srcdir}/ev-$pkgver/modules/ev.so" "${pkgdir}/usr/lib/php/modules/ev.so"
+  install -D -m644 ev.ini "${pkgdir}/etc/php/conf.d/ev.ini"
+}

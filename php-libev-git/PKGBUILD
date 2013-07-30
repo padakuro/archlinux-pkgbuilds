@@ -1,0 +1,41 @@
+# Maintainer: Pascal Kuendig <padakuro at gmail dot com>
+
+pkgname=php-libev-git
+_gitname=php-libev
+pkgver=83.582d000
+pkgrel=1
+pkgdesc="PHP extension providing an object-oriented binding to the libev event-loop library"
+arch=('i686' 'x86_64')
+url="https://github.com/m4rw3r/php-libev"
+license=('PHP')
+conflicts=('php-libev')
+depends=('php' 'libev')
+makedepends=('git' 'make' 'php' 'libev')
+provides=('php-libev')
+
+source=(
+  'git+https://github.com/m4rw3r/php-libev.git'
+  'libev.ini'
+)
+sha512sums=(
+  'SKIP'
+  '3fc51a4329f8511bbd8ebb75e10014a0fb991cd7cafd6b584ee42374db6c80b6078afc96e8406300aa610b26c53ca725980b0752226254350833c40b72f285f2'
+)
+
+pkgver() {
+  cd "$_gitname"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "$_gitname"
+
+  phpize
+  ./configure --with-libev
+  make
+}
+
+package() {
+  install -D -m755 "${srcdir}/${_gitname}/modules/libev.so" "${pkgdir}/usr/lib/php/modules/libev.so"
+  install -D -m644 libev.ini "${pkgdir}/etc/php/conf.d/libev.ini"
+}

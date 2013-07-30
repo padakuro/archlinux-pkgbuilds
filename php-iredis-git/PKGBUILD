@@ -1,0 +1,42 @@
+# Maintainer: Pascal Kuendig <padakuro at gmail dot com>
+
+pkgname=php-iredis-git
+_gitname=phpiredis
+pkgver=88.1b3195f
+pkgrel=1
+pkgdesc="PHP bindings for Hiredis (Redis client)"
+arch=('i686' 'x86_64')
+url="https://github.com/nrk/phpiredis"
+license=('BSD')
+conflicts=('php-iredis')
+depends=('php' 'hiredis')
+makedepends=('git' 'make' 'php' 'hiredis')
+provides=('php-iredis')
+
+source=(
+  'git+https://github.com/nrk/phpiredis.git'
+  'iredis.ini'
+)
+sha512sums=(
+  'SKIP'
+  '262dfd8c9e762e6c6769a27291f320062c921564a99b73e928bdc4be5c52fc428134aafe82238804952d9d57726260d0ba8f9a0bca75137126d3ac53f9dc3a72' 
+)
+
+pkgver() {
+  cd "$_gitname"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "$_gitname"
+
+  phpize
+  ./configure --enable-phpiredis --with-hiredis-dir=/usr
+  make
+}
+
+package() {
+  install -D -m644 iredis.ini "${pkgdir}/etc/php/conf.d/iredis.ini"
+  install -D -m755 "${srcdir}/${_gitname}/modules/phpiredis.so" "${pkgdir}/usr/lib/php/modules/iredis.so"
+  install -D -m644 "${srcdir}/${_gitname}/COPYING" "$pkgdir/usr/share/licenses/$_gitname/COPYING"
+}

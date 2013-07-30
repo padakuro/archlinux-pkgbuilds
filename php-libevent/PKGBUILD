@@ -1,0 +1,35 @@
+# Maintainer: Pascal Kuendig <padakuro at gmail dot com>
+
+pkgname=php-libevent
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="This extension is a wrapper for libevent - event notification library"
+arch=('i686' 'x86_64')
+url="http://pecl.php.net/package/libevent"
+license=('PHP')
+conflicts=('php-libevent')
+depends=('php' 'libevent')
+makedepends=('make' 'php' 'libevent')
+provides=('php-libevent')
+
+source=(
+  "http://pecl.php.net/get/libevent-$pkgver.tgz"
+  'libevent.ini'
+)
+sha512sums=(
+  'd49a24dcd9389ffe59e367d7c3b5d6e6cb07b5acc3f9c82cad9cd0fdcebf5feddcd7ec0bbc0c6d9eab450629e446575ce0ed711482557c4bc87cd4c6bc59f995'
+  '816351d38261d2e1238c699fff9fa44a69c58aab4364857a143a1b39198dd4e1b1323aa96bd39478c0d41629905d58ae7d58e3d28135b67812389f323847f3bb'
+)
+
+build() {
+  cd "libevent-$pkgver"
+
+  phpize
+  ./configure --with-libev --prefix=/usr
+  make
+}
+
+package() {
+  install -D -m755 "${srcdir}/libevent-$pkgver/modules/libevent.so" "${pkgdir}/usr/lib/php/modules/libevent.so"
+  install -D -m644 libevent.ini "${pkgdir}/etc/php/conf.d/libevent.ini"
+}

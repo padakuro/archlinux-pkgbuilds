@@ -1,0 +1,38 @@
+# Maintainer: Brian Knox <taotetek at gmail>
+# Contributor: Pascal Kuendig <padakuro at gmail dot com>
+
+pkgname=hiredis-git
+_gitname=hiredis
+pkgver=387.cc3ee45
+pkgrel=1
+pkgdesc="Minimalistic C client for Redis >= 1.2"
+arch=('i686' 'x86_64')
+url="https://github.com/redis/hiredis"
+license=('BSD')
+depends=('gcc-libs')
+makedepends=('git' 'make')
+conflicts=('hiredis')
+provides=('hiredis')
+
+source=(
+  'git+https://github.com/redis/hiredis.git'
+)
+sha512sums=(
+  'SKIP'
+)
+
+pkgver() {
+  cd "$_gitname"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  cd "$srcdir/$_gitname"
+  make
+}
+
+package() {
+  cd "$srcdir/$_gitname"
+  make PREFIX="$pkgdir/usr" install
+  install -D -m644 COPYING "$pkgdir/usr/share/licenses/$_gitname/COPYING"
+}
