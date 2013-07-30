@@ -1,0 +1,66 @@
+# Maintainer: Kirill Duborenko <k.duborenko@gmail.com>
+
+pkgname=robomongo-git
+_gitname=robomongo
+pkgver=666.1c30744
+pkgrel=1
+pkgdesc="Shell-centric crossplatform opensource MongoDB management tool."
+arch=("x86_64")
+url="http://www.robomongo.org/"
+license=('GPL-3')
+depends=('qt5-base' 'pcre')
+makedepends=('scons' 'cmake' 'boost')
+conflicts=('robomongo')
+
+source=(
+  'git+https://github.com/paralect/robomongo.git'
+  'mongodb-build-wno-error.patch'
+  'robomongo-undef-ref-getstringfield.patch'
+)
+sha512sums=(
+  'SKIP'
+  '9695b7b79c298a73e20facee6fdf6c2b3a9435eb1cfc60369a8dfad30ef8570d4b58245a3061c8834f4418aaaa896ef365c7dffcf42d62cceb43e49e91e7819d'
+  '576725b0b8db7970f8a2ca994f82940afb22d4775f0f10f19bbeeab509a80ec3dcb4961af24f11a16cb1085bd5e97f4a9b653dfe29323e563a442e850d54359b'
+)
+
+pkgver() {
+  cd "$_gitname"
+  echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+build() {
+  # build hacks, remove once resolved
+  # https://github.com/paralect/robomongo/pull/138
+  patch -p1 -N -d $srcdir/$_gitname/ < $startdir/mongodb-build-wno-error.patch
+  patch -p1 -N -d $srcdir/$_gitname/ < $startdir/robomongo-undef-ref-getstringfield.patch
+
+  targetDir=$srcdir/$_gitname/target
+  if [ ! -d $targetDir ]; then mkdir $targetDir; fi
+  
+  cd $targetDir
+  cmake .. -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+
+(
+cat <<EOF
+[Desktop Entry]
+Version=${pkgver}
+Name=Robomongo
+Icon=robomongo
+GenericName=MongoDB management tool
+Comment=Shell-centric cross-platform MongoDB management tool
+Exec=/usr/bin/robomongo
+Terminal=false
+Type=Application
+Categories=Development
+EOF
+) > "$startdir/robomongo.desktop"
+
+  install -D -m644 "$srcdir/$_gitname/install/robomongo.png" "$pkgdir/usr/share/pixmaps/robomongo.png"
+  install -D -m755 "$srcdir/$_gitname/target/src/build/robomongo" "$pkgdir/usr/bin/robomongo"
+  install -D -m644 "$srcdir/$_gitname/LICENSE" "$pkgdir/usr/share/licenses/$_gitname/LICENSE"
+  install -D -m644 "${startdir}/robomongo.desktop" "$pkgdir/usr/share/applications/robomongo.desktop"
+}

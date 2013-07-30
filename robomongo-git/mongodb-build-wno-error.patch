@@ -1,0 +1,16 @@
+diff --git a/src/third-party/mongodb/SConstruct b/src/third-party/mongodb/SConstruct
+index 253cead..9204c7c 100644
+--- a/src/third-party/mongodb/SConstruct
++++ b/src/third-party/mongodb/SConstruct
+@@ -688,7 +688,7 @@ if nix:
+                          "-Winvalid-pch"] )
+     # env.Append( " -Wconversion" ) TODO: this doesn't really work yet
+     if linux:
+-        env.Append( CCFLAGS=["-Werror", "-pipe"] )
++        env.Append( CCFLAGS=["-pipe"] )
+         if not has_option('clang'):
+             env.Append( CCFLAGS=["-fno-builtin-memcmp"] ) # glibc's memcmp is faster than gcc's
+ 
+-- 
+1.8.3.4
+
