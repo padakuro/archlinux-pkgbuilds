@@ -9,3 +9,6 @@ pkg/
 *.tar.bz2
 *.tbz2
 *.tar.xz
+
+archzfs-git/build/
+archzfs-git/repo/
