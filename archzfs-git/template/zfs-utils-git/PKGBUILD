@@ -7,10 +7,10 @@ pkgrel=1
 pkgdesc="Kernel module support files for the Zettabyte File System."
 depends=(
   "spl${KERNEL_PACKAGE}-git=${SPL_PKG_VERSION}"
-  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}-${KERNEL_REVISION}"
+  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}"
 )
 makedepends=(
-  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}-${KERNEL_REVISION}"
+  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}"
 )
 arch=("i686" "x86_64")
 url="http://zfsonlinux.org/"

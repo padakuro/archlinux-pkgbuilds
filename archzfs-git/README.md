@@ -11,19 +11,17 @@ so all credits to him for providing and maintaining them!
 
 General
 ```
-./build.sh KERNEL_VARIANT KERNEL_VERSION KERNEL_REVISION
+./build.sh KERNEL_VARIANT
 ```
 
 Example for [ck-nehalem](http://repo-ck.com/) kernel (linux-ck-nehalem=3.10.4-1)
 ```
-./build.sh "-ck-nehalem" "3.10.4" 1
-
+./build.sh "-ck-nehalem"
 ```
 
 Example for building for the ArchLinux core kernel (linux=3.10.3-3)
 ```
-./build.sh "" "3.10.3" 3
-
+./build.sh
 ```
 
-It is not possible to cross-build for different kernels! The kernel that is booted is the target!
+It is not possible to cross-build for different installed kernels! The kernel that is booted is the target!

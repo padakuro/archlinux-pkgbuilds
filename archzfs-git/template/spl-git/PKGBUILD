@@ -7,10 +7,10 @@ pkgrel=1
 pkgdesc="Solaris Porting Layer kernel modules."
 depends=(
   "spl-utils${KERNEL_PACKAGE}-git=${SPL_PKG_VERSION}"
-  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}-${KERNEL_REVISION}"
+  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}"
 )
 makedepends=(
-  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}-${KERNEL_REVISION}"
+  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}"
 )
 arch=("i686" "x86_64")
 url="http://zfsonlinux.org/"
@@ -50,4 +50,9 @@ package() {
   # move module tree /lib -> /usr/lib
   cp -r $pkgdir/{lib,usr}
   rm -r $pkgdir/lib
+  
+  # move modules from extra/ to extramodules/
+  PKG_MODULE_DIR=$pkgdir/usr/lib/modules
+  PKG_KERNEL_DIR=$(ls -1 $PKG_MODULE_DIR | head -1)
+  mv $PKG_MODULE_DIR/$PKG_KERNEL_DIR/extra $PKG_MODULE_DIR/$PKG_KERNEL_DIR/extramodules
 }

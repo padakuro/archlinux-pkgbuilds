@@ -1,11 +1,31 @@
 #/bin/sh
 
-# build.sh "-ck-nehalem" "3.10.3" 1
-# build.sh "" "3.10.3" 2
+# build.sh <KERNEL PACKAGE APPENDIX>
+#
+# to build for the linux-ck-nehalem package
+#   build.sh "-ck-nehalem"
+#
+# to build for the default kernel
+#   build.sh
 
-export KERNEL_PACKAGE=$1
-export KERNEL_VERSION=$2
-export KERNEL_REVISION=$3
+trap "echo 'Build aborted.'; exit;" 2
+
+KERNEL_PACKAGE=$1
+KERNEL_VERSION=$(uname -r)
+MAKEPKG_ARGS=$2
+
+# strip kernel editions (eg, -ck, -pf etc. from kernel version)
+if [ "$KERNEL_PACKAGE" != "" ]
+then
+    KERNEL_VERSION=$(echo "$KERNEL_VERSION" | cut -f1,2 -d-)
+fi
+# strip PKGREL from name
+LINUX_VERSION=$(echo "$KERNEL_VERSION" | cut -f1 -d-)
+KERNEL_PKGREL=$(echo "$KERNEL_VERSION" | cut -f2 -d-)
+
+export KERNEL_PACKAGE
+export KERNEL_VERSION
+
 BASE_DIR=$(pwd)
 BUILD_DIR=${BASE_DIR}/build
 REPO_DIR=${BASE_DIR}/repo
@@ -53,8 +73,8 @@ git_update "zfs" "https://github.com/zfsonlinux/zfs.git"
 SPL_CHANGESET=$(git_changeset "${REPO_DIR}/spl")
 ZFS_CHANGESET=$(git_changeset "${REPO_DIR}/zfs")
 
-export SPL_PKG_VERSION="${SPL_CHANGESET}_${KERNEL_VERSION}"
-export ZFS_PKG_VERSION="${ZFS_CHANGESET}_${KERNEL_VERSION}"
+export SPL_PKG_VERSION="${SPL_CHANGESET}_${LINUX_VERSION}"
+export ZFS_PKG_VERSION="${ZFS_CHANGESET}_${LINUX_VERSION}"
 
 declare -a PACKAGES=('spl-utils' 'spl' 'zfs-utils' 'zfs')
 for package in "${PACKAGES[@]}"
@@ -84,6 +104,9 @@ do
     # copy template files (eg. PKGBUILD)
     cp -f template/${package}-git/* "${package_build_dir}/"
     
+    # update PKGREL to match the kernel PKGREL
+    sed -i "s/pkgrel=1/pkgrel=${KERNEL_PKGREL}/" "${package_build_dir}/PKGBUILD"
+    
     case "${package_name}" in
         *spl*)
             echo "Building ${package_name}@${SPL_PKG_VERSION}"        
@@ -95,7 +118,7 @@ do
     
     # build the package and install the package
     cd "${package_build_dir}"
-    makepkg
+    makepkg $MAKEPKG_ARGS
     
     package_file=$(ls -1 | grep ".pkg.tar.xz")
     package_path="${package_build_dir}/${package_file}"

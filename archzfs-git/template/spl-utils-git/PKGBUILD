@@ -6,10 +6,10 @@ pkgver=git
 pkgrel=1
 pkgdesc="Solaris Porting Layer kernel module support files."
 depends=(
-  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}-${KERNEL_REVISION}"
+  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}"
 )
 makedepends=(
-  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}-${KERNEL_REVISION}"
+  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}"
 )
 arch=("i686" "x86_64")
 url="http://zfsonlinux.org/"
