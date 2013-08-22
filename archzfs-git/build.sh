@@ -14,11 +14,8 @@ KERNEL_PACKAGE=$1
 KERNEL_VERSION=$(uname -r)
 MAKEPKG_ARGS=$2
 
-# strip kernel editions (eg, -ck, -pf etc. from kernel version)
-if [ "$KERNEL_PACKAGE" != "" ]
-then
-    KERNEL_VERSION=$(echo "$KERNEL_VERSION" | cut -f1,2 -d-)
-fi
+# strip kernel editions (eg, -ARCH, -ck, -pf etc. from kernel version)
+KERNEL_VERSION=$(echo "$KERNEL_VERSION" | cut -f1,2 -d-)
 # strip PKGREL from name
 LINUX_VERSION=$(echo "$KERNEL_VERSION" | cut -f1 -d-)
 KERNEL_PKGREL=$(echo "$KERNEL_VERSION" | cut -f2 -d-)
@@ -118,7 +115,7 @@ do
     
     # build the package and install the package
     cd "${package_build_dir}"
-    makepkg $MAKEPKG_ARGS
+    makepkg -s $MAKEPKG_ARGS
     
     package_file=$(ls -1 | grep ".pkg.tar.xz")
     package_path="${package_build_dir}/${package_file}"
