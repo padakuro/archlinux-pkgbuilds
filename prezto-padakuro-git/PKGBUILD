@@ -1,0 +1,67 @@
+# Maintainer: Pascal Kuendig <padakuro@gmail.com>
+# Original PKGBUILD Author: Chionsas <aur@chionsas.lt>
+
+pkgname=prezto-padakuro-git
+_gitname='prezto'
+pkgrel=1
+pkgver=20130823
+pkgdesc="Instantly Awesome Zsh. padakuro edition (fork)."
+url="https://github.com/sorin-ionescu/prezto/"
+arch=('any')
+license=('MIT')
+depends=('zsh>=4.3.10')
+makedepends=('git' 'coreutils' 'sed')
+conflicts=('prezto-git')
+install='install'
+source=(
+    'git+https://github.com/padakuro/prezto.git'
+    'install'
+)
+sha512sums=(
+    'SKIP'
+    '0453362b0f2fd02c1923bde9ec5208f55102abee8849e215215ff43abc06484dc5e0c6239e3d15100b2255769ec59ada660dc16b36d4ced47ace9eab11e4f509'
+)
+backup=(
+    'etc/zsh/zlogin'
+    'etc/zsh/zlogout'
+    'etc/zsh/zpreztorc'
+    'etc/zsh/zshenv'
+    'etc/zsh/zshrc'
+)
+
+pkgver() {
+	cd "$srcdir/$_gitname"
+	git log -1 --format="%cd" --date=short | tr -d '-'
+}
+
+build() {
+	cd $srcdir/$_gitname
+	git submodule update --init --recursive
+
+	mkdir -p $srcdir/etc/zsh
+
+	rm -f $srcdir/etc/zsh/*
+
+	echo "source /etc/zsh/zpreztorc" > "$srcdir/etc/zsh/zshrc"
+	echo "source /usr/lib/prezto/init.zsh" >> "$srcdir/etc/zsh/zshrc"
+
+	sed -i 's#\${ZDOTDIR:-\$HOME}/\.zprezto/#/usr/lib/prezto/#g' $srcdir/$_gitname/init.zsh
+
+	for entry in ${backup[@]}; do
+		rcfile=$(basename $entry)
+		if [ -f $srcdir/$_gitname/runcoms/$rcfile ]; then
+			echo "source /usr/lib/prezto/runcoms/$rcfile" >> "$srcdir/etc/zsh/$rcfile"
+		fi
+	done	
+}
+
+package() {
+	mkdir -p $pkgdir/usr/lib/prezto
+	cp -r $srcdir/$_gitname/* $pkgdir/usr/lib/prezto
+
+	mkdir -p $pkgdir/usr/share/doc/prezto
+	mv $pkgdir/usr/lib/prezto/*.md $pkgdir/usr/share/doc/prezto
+
+	mkdir -p $pkgdir/etc
+	cp -r $srcdir/etc/zsh $pkgdir/etc
+}
