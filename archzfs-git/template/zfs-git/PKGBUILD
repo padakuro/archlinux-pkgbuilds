@@ -1,17 +1,17 @@
 # Maintainer: Jesus Alvarez <jeezusjr at gmail dot com>
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
-pkgname=("zfs${KERNEL_PACKAGE}-git")
+pkgname=("zfs$KERNEL_PACKAGE-git")
 pkgver=git
 pkgrel=1
 pkgdesc="Kernel modules for the Zettabyte File System."
 depends=(
-  "spl${KERNEL_PACKAGE}-git=${SPL_PKG_VERSION}"
-  "zfs-utils${KERNEL_PACKAGE}-git=${ZFS_PKG_VERSION}"
-  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}"
+  "spl$KERNEL_PACKAGE-git=$SPL_PKG_VERSION"
+  "zfs-utils$KERNEL_PACKAGE-git=$ZFS_PKG_VERSION"
+  "linux$KERNEL_PACKAGE=$KERNEL_VERSION"
 )
 makedepends=(
-  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}"
+  "linux$KERNEL_PACKAGE-headers=$KERNEL_VERSION"
 )
 arch=("i686" "x86_64")
 url="http://zfsonlinux.org/"
@@ -19,16 +19,14 @@ source=(
   'git+https://github.com/zfsonlinux/zfs.git'
 )
 #groups=("archzfs")
-sha512sums=(
-  'SKIP'
-)
+sha512sums=('SKIP')
 license=("CDDL")
 install=zfs.install
 conflicts=('zfs')
 provides=('zfs')
 
 pkgver() {
-    echo "${ZFS_PKG_VERSION}"
+    echo "$ZFS_PKG_VERSION"
 }
 
 build() {

@@ -1,16 +1,16 @@
 # Maintainer: Jesus Alvarez <jeezusjr at gmail dot com>
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
-pkgname=("zfs-utils${KERNEL_PACKAGE}-git")
+pkgname=("zfs-utils$KERNEL_PACKAGE-git")
 pkgver=git
 pkgrel=1
 pkgdesc="Kernel module support files for the Zettabyte File System."
 depends=(
-  "spl${KERNEL_PACKAGE}-git=${SPL_PKG_VERSION}"
-  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}"
+  "spl$KERNEL_PACKAGE-git=$SPL_PKG_VERSION"
+  "linux$KERNEL_PACKAGE=$KERNEL_VERSION"
 )
 makedepends=(
-  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}"
+  "linux$KERNEL_PACKAGE-headers=$KERNEL_VERSION"
 )
 arch=("i686" "x86_64")
 url="http://zfsonlinux.org/"
@@ -22,19 +22,17 @@ source=(
   zfs-utils.service
 )
 #groups=("archzfs")
-sha512sums=(
-  'SKIP'
-  'e7ccb7179c4c455c496daab192099d7553674b9505801e25a2ea8c67a1b4de15d68ac99b2c3347c1f3454f88ede7694f08da61c5d061f0577bb1594ca4a90f12'
-  'd5bd25217aecf001ea1e4bdc1f4a14073c8ece11d422369f8d49b5d672ba97ee99937d98c4dd9352e632aa15c002e991dd57122b545282360e3a681edecaf660'
-  'cfbd5cd861ef5f7e11269685110474406935c51e3fa092f553b13c07fedcd6af096c1d94d865cebab23abadf35657d3ceb2a4239666bda84f469de9b6b66cb11'
-  'cd57a1bbcc23f96b696a499749e018b9d0bb776be0b5e296719499aaf20cc82bb4d404ebeab44d99723dd712f84ee25bd0676940d126175f9997e8ca6e6f2c0b'
-)
+sha512sums=('SKIP'
+            'e7ccb7179c4c455c496daab192099d7553674b9505801e25a2ea8c67a1b4de15d68ac99b2c3347c1f3454f88ede7694f08da61c5d061f0577bb1594ca4a90f12'
+            'd5bd25217aecf001ea1e4bdc1f4a14073c8ece11d422369f8d49b5d672ba97ee99937d98c4dd9352e632aa15c002e991dd57122b545282360e3a681edecaf660'
+            '6504d1ec3cc43a442b5ed9ae472f25c7f1034a7b64e450823133289577d522d4744bfe76ee19f88461afde19948e92286e9e78d6ecf76f1ec13ee4ae49915ad2'
+            'fc1bb3a42af767092360de2a09ddf5414b2dca3bbfaf10c60a1ae6ec7441e03155aead844ba6f2339f99cf91e6e34afcd5cd4a707e6494aa45ffaee59cd72cf3')
 license=("CDDL")
 conflicts=('zfs-utils')
 provides=('zfs-utils')
 
 pkgver() {
-    echo "${ZFS_PKG_VERSION}"
+    echo "$ZFS_PKG_VERSION"
 }
 
 build() {

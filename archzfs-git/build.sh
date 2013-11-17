@@ -10,6 +10,10 @@
 
 trap "echo 'Build aborted.'; exit;" 2
 
+export CHROOT=/home/pk/build/buildchroot
+
+sudo arch-nspawn $CHROOT/root pacman -Syu
+
 KERNEL_PACKAGE=$1
 KERNEL_VERSION=$(uname -r)
 MAKEPKG_ARGS=$2
@@ -56,6 +60,17 @@ git_changeset() {
     echo $(git rev-parse --short HEAD)
 }
 
+# replace PKGBUILD vars
+update_pkgbuild() {
+	pkgbuildfile=$1
+	
+	sed -i "s/\$KERNEL_PACKAGE/${KERNEL_PACKAGE}/g" $pkgbuildfile
+	sed -i "s/\$KERNEL_VERSION/${KERNEL_VERSION}/g" $pkgbuildfile
+	sed -i "s/\$SPL_PKG_VERSION/${SPL_PKG_VERSION}/g" $pkgbuildfile
+	sed -i "s/\$ZFS_PKG_VERSION/${ZFS_PKG_VERSION}/g" $pkgbuildfile
+	sed -i "s/pkgrel=1/pkgrel=${KERNEL_PKGREL}/g" $pkgbuildfile 
+}
+
 if [ ! -d "${REPO_DIR}" ]
 then
     mkdir -p "${REPO_DIR}"
@@ -90,10 +105,10 @@ do
         
         case "${package_name}" in
             *spl*)
-            ln -s "${REPO_DIR}/spl" "${package_build_dir}/"
+            cp -R "${REPO_DIR}/spl" "${package_build_dir}/"
             ;;
             *zfs*)
-            ln -s "${REPO_DIR}/zfs" "${package_build_dir}/"
+            cp -R "${REPO_DIR}/zfs" "${package_build_dir}/"
             ;;
         esac
     fi
@@ -102,11 +117,11 @@ do
     cp -f template/${package}-git/* "${package_build_dir}/"
     
     # update PKGREL to match the kernel PKGREL
-    sed -i "s/pkgrel=1/pkgrel=${KERNEL_PKGREL}/" "${package_build_dir}/PKGBUILD"
+    update_pkgbuild "${package_build_dir}/PKGBUILD"
     
     case "${package_name}" in
         *spl*)
-            echo "Building ${package_name}@${SPL_PKG_VERSION}"        
+            echo "Building ${package_name}@${SPL_PKG_VERSION}"
         ;;
         *zfs*)
             echo "Building ${package_name}@${ZFS_PKG_VERSION}"
@@ -115,10 +130,8 @@ do
     
     # build the package and install the package
     cd "${package_build_dir}"
-    makepkg -s $MAKEPKG_ARGS
-    
+    sudo makechrootpkg -r $CHROOT -- -i -L
+
     package_file=$(ls -1 | grep ".pkg.tar.xz")
     package_path="${package_build_dir}/${package_file}"
-    
-    sudo pacman -U "${package_path}"
 done

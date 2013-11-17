@@ -1,16 +1,16 @@
 # Maintainer: Jesus Alvarez <jeezusjr at gmail dot com>
 # Contributor: Kyle Fuller <inbox at kylefuller dot co dot uk>
 
-pkgname=("spl${KERNEL_PACKAGE}-git")
+pkgname=("spl$KERNEL_PACKAGE-git")
 pkgver=git
 pkgrel=1
 pkgdesc="Solaris Porting Layer kernel modules."
 depends=(
-  "spl-utils${KERNEL_PACKAGE}-git=${SPL_PKG_VERSION}"
-  "linux${KERNEL_PACKAGE}=${KERNEL_VERSION}"
+  "spl-utils$KERNEL_PACKAGE-git=$SPL_PKG_VERSION"
+  "linux$KERNEL_PACKAGE=$KERNEL_VERSION"
 )
 makedepends=(
-  "linux${KERNEL_PACKAGE}-headers=${KERNEL_VERSION}"
+  "linux$KERNEL_PACKAGE-headers=$KERNEL_VERSION"
 )
 arch=("i686" "x86_64")
 url="http://zfsonlinux.org/"
@@ -18,16 +18,14 @@ source=(
   'git+https://github.com/zfsonlinux/spl.git'
 )
 #groups=("archzfs")
-sha512sums=(
-  'SKIP'
-)
+sha512sums=('SKIP')
 license=("GPL")
 install=spl.install
 conflicts=('spl')
 provides=('spl')
 
 pkgver() {
-    echo "${SPL_PKG_VERSION}"
+    echo "$SPL_PKG_VERSION"
 }
 
 build() {
