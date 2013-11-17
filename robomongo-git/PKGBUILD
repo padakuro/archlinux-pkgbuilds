@@ -16,10 +16,8 @@ source=(
   'git+https://github.com/paralect/robomongo.git'
   'mongodb-typedef_uint64_t.patch'
 )
-sha512sums=(
-  'SKIP'
-  '9695b7b79c298a73e20facee6fdf6c2b3a9435eb1cfc60369a8dfad30ef8570d4b58245a3061c8834f4418aaaa896ef365c7dffcf42d62cceb43e49e91e7819d'
-)
+sha512sums=('SKIP'
+            '7633300162b3e1e4b7e84e47d0c776310e3ca846700940e6923cc865f2a1965bc4bde999fae76d34e77af454765877dc8e425c8774feec86153f62f39d0725b4')
 
 pkgver() {
   cd "$_gitname"
@@ -28,7 +26,7 @@ pkgver() {
 
 build() {
   # build hack: fixes undefined uint64_t error
-  patch -p1 -N d $srcdir/$_gitname/ < $startdir/mongodb-typedef_uint64_t.patch
+  patch -p1 -N -d $srcdir/$_gitname/ < $startdir/mongodb-typedef_uint64_t.patch
 
   targetDir=$srcdir/$_gitname/target
   if [ ! -d $targetDir ]; then mkdir $targetDir; fi
