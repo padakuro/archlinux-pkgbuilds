@@ -1,0 +1,12 @@
+diff --git a/src/third-party/mongodb/src/mongo/pch.h b/src/third-party/mongodb/src/mongo/pch.h
+index 6bb9df6..24ca0f7 100644
+--- a/src/third-party/mongodb/src/mongo/pch.h
++++ b/src/third-party/mongodb/src/mongo/pch.h
+@@ -39,6 +39,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <signal.h>
++#include <stdint.h>
+ 
+ #include "time.h"
+ #include "string.h"
