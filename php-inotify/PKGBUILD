@@ -1,0 +1,31 @@
+# Maintainer: Pascal Kuendig <padakuro@gmail.com>
+
+pkgname=php-inotify
+pkgver=0.1.6
+pkgrel=1
+pkgdesc="The inotify extension allows to use inotify functions in a PHP script."
+arch=('i686' 'x86_64')
+url="http://pecl.php.net/package/inotify"
+license=('PHP')
+depends=('php')
+makedepends=('make' 'php')
+
+source=(
+  "http://pecl.php.net/get/inotify-$pkgver.tgz"
+  'inotify.ini'
+)
+sha512sums=('5e6d77926eb680eebed1a6a910d7a2c6f68cccc9aba8139b4aa5af7ef19d77e997ac2cee5af3a6c1ce0ae53b74fe81898910ece2b9e960a22632668bcc4ecd4a'
+            'd40cb452909602a3a41d5d37c0919526f4d3135cdc692ad2ee109bb2c11624731fe2b18b0b811630a1d7913bb137efd0d99e1688be7af344e6b45fa57b5f5245')
+
+build() {
+  cd "inotify-$pkgver"
+
+  phpize
+  ./configure --with-inotify --prefix=/usr
+  make
+}
+
+package() {
+  install -D -m755 "${srcdir}/inotify-$pkgver/modules/inotify.so" "${pkgdir}/usr/lib/php/modules/inotify.so"
+  install -D -m644 inotify.ini "${pkgdir}/etc/php/conf.d/inotify.ini"
+}
