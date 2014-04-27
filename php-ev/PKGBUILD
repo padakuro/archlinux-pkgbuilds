@@ -1,7 +1,7 @@
 # Maintainer: Pascal Kuendig <padakuro at gmail dot com>
 
 pkgname=php-ev
-pkgver=0.2.4
+pkgver=0.2.10
 pkgrel=1
 pkgdesc="ev provides interface to libev library - high performance full-featured event loop written in C"
 arch=('i686' 'x86_64')
@@ -16,10 +16,8 @@ source=(
   "http://pecl.php.net/get/ev-$pkgver.tgz"
   'ev.ini'
 )
-sha512sums=(
-  '54fd452138fe94935a4faaa551668190c86b2fb5e1f588de882de9d47020a9a1b41cf1d26ef09b0b1310941c2a60db7531eaad87c7a23472bd3201ee7c466881'
-  'be1cf535549a2188456a2639cebb372ffcffbfb868a97db2b4157af055bd1b7c152e03c7c9b6fc846bc48bdf68241c929b7af2e001b4bcb5ae9f191b6b337178'
-)
+sha512sums=('d12fe0fa0a46e08e2e20469145a0766182e0b5f50e2b3d31c6c0519f80f875bce20852a81c60a319501a60e1a8afa5d6afc51652311b75e50cc22d4458fb34ca'
+            'be1cf535549a2188456a2639cebb372ffcffbfb868a97db2b4157af055bd1b7c152e03c7c9b6fc846bc48bdf68241c929b7af2e001b4bcb5ae9f191b6b337178')
 
 build() {
   cd "ev-$pkgver"
