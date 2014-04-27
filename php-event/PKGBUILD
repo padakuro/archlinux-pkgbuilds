@@ -1,0 +1,33 @@
+# Maintainer: Pascal Kuendig <padakuro@gmail.com>
+
+pkgname=php-event
+pkgver=1.9.1
+pkgrel=1
+pkgdesc="This is an extension to efficiently schedule I/O, time and signal based events using the best I/O notification mechanism available for specific platform"
+arch=('i686' 'x86_64')
+url="http://pecl.php.net/package/event"
+license=('PHP')
+conflicts=('php-event')
+depends=('php' 'libevent>=2.0')
+makedepends=('make' 'php')
+provides=('php-event')
+
+source=(
+  "http://pecl.php.net/get/event-$pkgver.tgz"
+  'event.ini'
+)
+sha512sums=('0d99b6da88ce43954ec54181ec1b33f781416807b63bb042d8ed4bb98615e1f932997279d31b9bd02de8a281bd17629acb8bc09a3c01e6cb4708cd0bd969a9eb'
+            'e18bd853e2708f93bd7de3625e370d257a3fd4487127d7b8508fdbe935870ba1a3bb4115085135077cbfd775f6a0911b82d14700ac17f1b1db0fb97b6da83814')
+
+build() {
+  cd "event-$pkgver"
+
+  phpize
+  ./configure --with-ev --prefix=/usr
+  make
+}
+
+package() {
+  install -D -m755 "${srcdir}/event-$pkgver/modules/event.so" "${pkgdir}/usr/lib/php/modules/event.so"
+  install -D -m644 event.ini "${pkgdir}/etc/php/conf.d/event.ini"
+}
