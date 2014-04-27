@@ -1,4 +1,4 @@
-# Maintainer: Pascal Kuendig <padakuro at gmail dot com>
+# Maintainer: Pascal Kuendig <padakuro@gmail.com>
 
 pkgname=php-ev
 pkgver=0.2.10
@@ -8,7 +8,7 @@ arch=('i686' 'x86_64')
 url="http://pecl.php.net/package/ev"
 license=('PHP')
 conflicts=('php-ev')
-depends=('php')
+depends=('php' 'libev')
 makedepends=('make' 'php')
 provides=('php-ev')
 
